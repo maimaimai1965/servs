@@ -1,0 +1,7 @@
+logging.level.ua.telesens.o320.trt.integration.bss.config.CustomCommonsRequestLoggingFilter: DEBUG
+logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+logging.level.ua.telesens.o320.trt.integration.cp.config.CustomCommonsRequestLoggingFilter: DEBUG
+logging.level.ua.telesens.o320.trt.integration.cp.service.LoggingServiceImpl: DEBUG
+trt:
+  core:
+    external-url: http://172.25.40.82:9998

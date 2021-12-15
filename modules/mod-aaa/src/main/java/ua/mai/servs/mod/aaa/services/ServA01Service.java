@@ -2,13 +2,14 @@ package ua.mai.servs.mod.aaa.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ua.mai.servs.mod.aaa.models.Method001Serv001Resource;
-import ua.mai.servs.mod.aaa.payloads.Method001Serv001Request;
+import ua.mai.servs.mod.aaa.models.Method001ServA01Resource;
+import ua.mai.servs.mod.aaa.models.Method002ServA01Resource;
+import ua.mai.servs.mod.aaa.payloads.Method001ServA01Request;
 import javax.annotation.PostConstruct;
 
 @Slf4j
 @Service
-public class Serv001Service {
+public class ServA01Service {
 
 //    @Autowired
 //    public AaaService(MockProperties mockProperties, MiddlewareProps middlewareProps, ActivationCallbackService activationCallbackService) {
@@ -70,13 +71,21 @@ public class Serv001Service {
 //        });
     }
 
-    public Method001Serv001Resource method001Serv001(Method001Serv001Request method001Serv001Request) {
-        log.debug("methodAaa001(): methodAaa001Request.state=" + method001Serv001Request.getState());
-        Method001Serv001Resource resource = Method001Serv001Resource.builder()
+    public Method001ServA01Resource method001ServA01(Method001ServA01Request method001ServA01Request) {
+        log.debug("method001Serv001(): state=" + method001ServA01Request.getState());
+        Method001ServA01Resource resource = Method001ServA01Resource.builder()
                 .id(java.util.UUID.randomUUID().toString())
-                .state(method001Serv001Request.getState())
+                .state(method001ServA01Request.getState())
                 .build();
 //        log.debug("  return: method001Serv001Request.id=" + resource.getId());
+        return resource;
+    }
+
+    public Method002ServA01Resource method002ServA01(String id) {
+        log.debug("method002Serv001(): id=" + id);
+        Method002ServA01Resource resource = Method002ServA01Resource.builder()
+              .desc("description of " + id)
+              .build();
         return resource;
     }
 

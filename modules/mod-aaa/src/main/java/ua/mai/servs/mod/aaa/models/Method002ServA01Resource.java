@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Method001Serv001Resource {
+public class Method002ServA01Resource {
     private String id;
-    private String state;
+    private String desc;
 //    private List<RelatedPartyResource> relatedParty;
 //    private List<ServiceCharacteristicResource> serviceCharacteristic;
 //    private ServiceSpecificationResource serviceSpecification;

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @Slf4j
-public class CustomRequestResponseLoggerFilter extends OncePerRequestFilter {
+public class RequestResponseLogFilter extends OncePerRequestFilter {
 
     public static final String DEFAULT_BEFORE_REQUEST_MESSAGE_PREFIX = "request start: ";
     public static final String DEFAULT_BEFORE_REQUEST_MESSAGE_SUFFIX = "";

@@ -1,9 +1,10 @@
 logging.level.ua.mai.servs.mod.aaa.controllers: DEBUG
 logging.level.ua.mai.servs.mod.aaa.services: DEBUG
 
-logging.level.ua.ua.mai.servs.comon.CustomRequestResponseLoggerFilter: DEBUG
-logging.level.org.springframework.web.servlet: DEBUG
+# For module aaa
+logging.level.ua.mai.servs.common.RequestResponseLogFilter: DEBUG
 
+logging.level.org.springframework.web.servlet: INFO
 logging.level.ua.mai.servs.config.CustomCommonsRequestLoggingFilter: INFO
 logging.level.ua.mai.servs.config.CustomResponseLoggingFilter: INFO
 logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter: INFO

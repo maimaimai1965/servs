@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Method001Serv001Request {
+public class Method001ServA01Request {
     @NotNull
     private String state;
 //    @Valid

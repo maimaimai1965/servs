@@ -2,7 +2,7 @@ package ua.mai.servs.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ua.mai.servs.common.CustomRequestResponseLoggerFilter;
+import ua.mai.servs.common.RequestResponseLogFilter;
 
 @Configuration
 public class RequestLoggingFilterConfig {
@@ -23,11 +23,11 @@ public class RequestLoggingFilterConfig {
 //    }
 
     @Bean
-    public CustomRequestResponseLoggerFilter logFilter() {
-        CustomRequestResponseLoggerFilter filter = new CustomRequestResponseLoggerFilter();
-        filter.setBeforeRequestMessagePrefix("REQ_IN start  : ");
+    public RequestResponseLogFilter logFilter() {
+        RequestResponseLogFilter filter = new RequestResponseLogFilter();
+        filter.setBeforeRequestMessagePrefix("REQ_IN (start)  : ");
         filter.setBeforeRequestMessageSuffix("");
-        filter.setAfterRequestMessagePrefix("REQ_IN finish : ");
+        filter.setAfterRequestMessagePrefix("REQ_IN (finish) : ");
         filter.setAfterRequestMessageSuffix("");
         filter.setIncludeRequestPayload(true);
         filter.setMaxRequestPayloadLength(10000);

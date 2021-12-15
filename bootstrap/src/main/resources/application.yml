@@ -43,7 +43,8 @@ servs:
       port: 5001
       endpoints:
         operations:
-          method001-serv001: /servs/api/servs001/v1/method001Serv001
+          method001-servA01: /servs/api/servs001/v1/method001ServA01
+          method002-servA01: /servs/api/servs001/v1/method002ServA01
       operation-method-uri:
     bbb:
       host: localhost

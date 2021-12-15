@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.core.env.Environment;
 import ua.mai.servs.bootstrap.config.DefaultProfileUtil;
-import ua.mai.servs.common.CustomRequestResponseLoggerFilter;
 import ua.mai.servs.config.ModAaaConfig;
 
 import java.net.InetAddress;
@@ -36,7 +35,6 @@ public class ModAaaApplication {
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
         logApplicationStartup(env);
-new CustomRequestResponseLoggerFilter();
     }
 
     private static void logApplicationStartup(Environment env) {

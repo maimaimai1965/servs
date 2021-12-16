@@ -1,22 +1,23 @@
-package ua.mai.servs.mod.aaa.services;
+package ua.mai.servs.mod.bbb.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.mai.servs.mod.aaa.models.Method001ServA01Resource;
-import ua.mai.servs.mod.aaa.models.Method002ServA01Resource;
-import ua.mai.servs.mod.aaa.payloads.Method001ServA01Request;
+import ua.mai.servs.mod.bbb.models.Method001ServB11Resource;
+import ua.mai.servs.mod.bbb.models.Method002ServB11Resource;
+import ua.mai.servs.mod.bbb.payloads.Method001ServB11Request;
+
 import javax.annotation.PostConstruct;
 
 @Slf4j
 @Service
-public class ServA01Service {
+public class ServB11Service {
 
-    private ServA02Service servA02;
+    private ServB12Service servB12;
 
     @Autowired
-    public ServA01Service(ServA02Service servA02) {
-        this.servA02 = servA02;
+    public ServB11Service(ServB12Service servB12) {
+        this.servB12 = servB12;
     }
 
     @PostConstruct
@@ -72,20 +73,20 @@ public class ServA01Service {
 //        });
     }
 
-    public Method001ServA01Resource method001ServA01(Method001ServA01Request method001ServA01Request) {
-        log.debug("method001ServA01(): state=" + method001ServA01Request.getState());
-        Method001ServA01Resource resource = Method001ServA01Resource.builder()
+    public Method001ServB11Resource method001ServB11(Method001ServB11Request method001ServB11Request) {
+        log.debug("method001ServB11(): state=" + method001ServB11Request.getState());
+        Method001ServB11Resource resource = Method001ServB11Resource.builder()
                 .id(java.util.UUID.randomUUID().toString())
-                .state(method001ServA01Request.getState())
+                .state(method001ServB11Request.getState())
                 .build();
 //        log.debug("  return: method001Serv001Request.id=" + resource.getId());
         return resource;
     }
 
-    public Method002ServA01Resource method002ServA01(String id) {
-        log.debug("method002ServA01(): id=" + id);
-        String processedId = servA02.method001ServA02(id);
-        Method002ServA01Resource resource = Method002ServA01Resource.builder()
+    public Method002ServB11Resource method002ServB11(String id) {
+        log.debug("method002ServB11(): id=" + id);
+        String processedId = servB12.method001ServB12(id);
+        Method002ServB11Resource resource = Method002ServB11Resource.builder()
               .processedId(processedId)
               .build();
         return resource;

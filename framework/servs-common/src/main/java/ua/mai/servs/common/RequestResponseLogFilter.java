@@ -79,37 +79,36 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
         ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
 
-        filterChain.doFilter(wrappedRequest, wrappedResponse);     // ======== This performs the actual request!
+        try {
+            filterChain.doFilter(wrappedRequest, wrappedResponse);     // ======== This performs the actual request!
+        } finally {
 
-        long duration = System.currentTimeMillis() - startTime;
+            long duration = System.currentTimeMillis() - startTime;
 
-        if (log.isDebugEnabled()) {
-            String message = "";
+            if (log.isDebugEnabled()) {
+                String message = "";
 
-            // I can only log the request's body AFTER the request has been made and ContentCachingRequestWrapper did its work.
-            if (includeRequestPayload) {
-                String requestBody = this.getContentAsString(wrappedRequest.getContentAsByteArray(), this.maxRequestPayloadLength,
-                      request.getCharacterEncoding());
-                if (requestBody.length() > 0) {
-                    reqInfo.append("payload=[")
-                          .append(requestBody)
-                          .append("]");
+                // I can only log the request's body AFTER the request has been made and ContentCachingRequestWrapper did its work.
+                if (includeRequestPayload) {
+                    String requestBody = this.getContentAsString(wrappedRequest.getContentAsByteArray(), this.maxRequestPayloadLength,
+                          request.getCharacterEncoding());
+                    if (requestBody.length() > 0) {
+                        reqInfo.append("payload=[").append(requestBody).append("]");
+                    }
+                    log.debug(afterRequestMessagePrefix + reqInfo.append(afterRequestMessageSuffix));
+                }
+
+                message = "";
+                if (includeResponsePayload) {
+                    message = "payload=[" + getContentAsString(wrappedResponse.getContentAsByteArray(), this.maxResponsePayloadLength,
+                          response.getCharacterEncoding()) + "]";
                 }
                 log.debug(
-                      afterRequestMessagePrefix + reqInfo.append(afterRequestMessageSuffix));
+                      responseMessagePrefix + response.getStatus() + (showRunTime ? (" (" + duration + "ms) ") : "") + message + responseMessageSuffix);
             }
 
-            message = "";
-            if (includeResponsePayload) {
-                message = "payload=[" + getContentAsString(wrappedResponse.getContentAsByteArray(), this.maxResponsePayloadLength,
-                      response.getCharacterEncoding()) + "]";
-            }
-            log.debug(
-                  responseMessagePrefix + response.getStatus() + (showRunTime ? (" (" + duration + "ms) ") : "")
-                        + message + responseMessageSuffix);
+            wrappedResponse.copyBodyToResponse();  // IMPORTANT: copy content of response back into original response
         }
-
-        wrappedResponse.copyBodyToResponse();  // IMPORTANT: copy content of response back into original response
     }
 
     public void setBeforeRequestMessagePrefix(String beforeRequestMessagePrefix) {

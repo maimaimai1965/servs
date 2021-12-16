@@ -1,23 +1,23 @@
 package ua.mai.servs.mod.aaa.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.mai.servs.mod.aaa.models.Method001ServA01Resource;
 import ua.mai.servs.mod.aaa.models.Method002ServA01Resource;
 import ua.mai.servs.mod.aaa.payloads.Method001ServA01Request;
+
 import javax.annotation.PostConstruct;
 
 @Slf4j
 @Service
-public class ServA01Service {
+public class ServA02Service {
 
-    private ServA02Service servA02;
-
-    @Autowired
-    public ServA01Service(ServA02Service servA02) {
-        this.servA02 = servA02;
-    }
+//    @Autowired
+//    public AaaService(MockProperties mockProperties, MiddlewareProps middlewareProps, ActivationCallbackService activationCallbackService) {
+//        this.mockProperties = mockProperties;
+//        this.middlewareProps = middlewareProps;
+//        this.activationCallbackService = activationCallbackService;
+//    }
 
     @PostConstruct
     private void postConstruct() {
@@ -72,23 +72,9 @@ public class ServA01Service {
 //        });
     }
 
-    public Method001ServA01Resource method001ServA01(Method001ServA01Request method001ServA01Request) {
-        log.debug("method001ServA01(): state=" + method001ServA01Request.getState());
-        Method001ServA01Resource resource = Method001ServA01Resource.builder()
-                .id(java.util.UUID.randomUUID().toString())
-                .state(method001ServA01Request.getState())
-                .build();
-//        log.debug("  return: method001Serv001Request.id=" + resource.getId());
-        return resource;
-    }
-
-    public Method002ServA01Resource method002ServA01(String id) {
-        log.debug("method002ServA01(): id=" + id);
-        String processedId = servA02.method001ServA02(id);
-        Method002ServA01Resource resource = Method002ServA01Resource.builder()
-              .processedId(processedId)
-              .build();
-        return resource;
+    public String method001ServA02(String id) {
+        log.debug("method001Serv001(): start");
+        return "<processed in ServA02: " + id + ">";
     }
 
 

@@ -133,6 +133,11 @@
                 <artifactId>mod-aaa</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>ua.mai.servs</groupId>
+                <artifactId>mod-bbb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>

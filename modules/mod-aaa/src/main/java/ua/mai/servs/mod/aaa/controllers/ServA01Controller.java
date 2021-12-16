@@ -34,7 +34,7 @@ public class ServA01Controller {
 
     @GetMapping(value = "${servs.modules.aaa.endpoints.operations.method002-servA01}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Method002ServA01Resource> method001ServA01(@RequestParam String id) {
-        log.debug("GET method002ServA01()");
+        log.debug("GET method002ServA01(): id=" + id);
         return ResponseEntity.ok(servA01Service.method002ServA01(id));
     }
 

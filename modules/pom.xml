@@ -15,5 +15,6 @@
 
     <modules>
         <module>mod-aaa</module>
+        <module>mod-bbb</module>
     </modules>
 </project>

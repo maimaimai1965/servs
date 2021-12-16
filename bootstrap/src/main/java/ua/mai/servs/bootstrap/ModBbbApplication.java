@@ -18,20 +18,20 @@ import java.net.UnknownHostException;
 //                AaClientConfiguration.class,
                 ModBbbConfig.class,
         }, exclude = {SecurityAutoConfiguration.class})
-//@SpringBootApplication(scanBasePackages = "ua.mai.servs.mod.aaa")
-public class ModAaaApplication {
+//@SpringBootApplication(scanBasePackages = "ua.mai.servs.mod.bbb")
+public class ModBbbApplication {
 
-    private static final Logger log = LoggerFactory.getLogger(ModAaaApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(ModBbbApplication.class);
 
     private final Environment env;
 
-    public ModAaaApplication(Environment env) {
+    public ModBbbApplication(Environment env) {
         this.env = env;
     }
 
     public static void main(String[] args) {
-        System.getProperties().setProperty("spring.application.name", "SERVS: Aaa Module Services");
-        SpringApplication app = new SpringApplication(ModAaaApplication.class);
+        System.getProperties().setProperty("spring.application.name", "SERVS: Bbb Module Services");
+        SpringApplication app = new SpringApplication(ModBbbApplication.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
         logApplicationStartup(env);

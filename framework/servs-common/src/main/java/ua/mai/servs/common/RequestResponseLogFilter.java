@@ -79,9 +79,18 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
         ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
 
+        Exception exception = null;
         try {
             filterChain.doFilter(wrappedRequest, wrappedResponse);     // ======== This performs the actual request!
-        } finally {
+        }
+        catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        }
+        finally {
+            if (exception != null) {
+                log.debug("ERROR : {}", exception.getMessage());
+            }
 
             long duration = System.currentTimeMillis() - startTime;
 
@@ -98,16 +107,16 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
                     log.debug(afterRequestMessagePrefix + reqInfo.append(afterRequestMessageSuffix));
                 }
 
-                message = "";
-                if (includeResponsePayload) {
-                    message = "payload=[" + getContentAsString(wrappedResponse.getContentAsByteArray(), this.maxResponsePayloadLength,
-                          response.getCharacterEncoding()) + "]";
+                if (exception == null) {
+                    message = "";
+                    if (includeResponsePayload) {
+                        message = "payload=[" + getContentAsString(wrappedResponse.getContentAsByteArray(), this.maxResponsePayloadLength,
+                              response.getCharacterEncoding()) + "]";
+                    }
+                    log.debug(responseMessagePrefix + response.getStatus() + (showRunTime ? (" (" + duration + "ms) ") : "") + message + responseMessageSuffix);
+                    wrappedResponse.copyBodyToResponse();  // IMPORTANT: copy content of response back into original response
                 }
-                log.debug(
-                      responseMessagePrefix + response.getStatus() + (showRunTime ? (" (" + duration + "ms) ") : "") + message + responseMessageSuffix);
             }
-
-            wrappedResponse.copyBodyToResponse();  // IMPORTANT: copy content of response back into original response
         }
     }
 

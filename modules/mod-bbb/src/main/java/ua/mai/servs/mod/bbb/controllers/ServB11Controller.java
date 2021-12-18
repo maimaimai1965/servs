@@ -24,17 +24,20 @@ public class ServB11Controller {
         this.servB11Service = servA01Service;
     }
 
-    @PostMapping(value = "${servs.modules.bbb.endpoints.operations.method001-servB11}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Method001ServB11Resource> method002ServB11(@Valid @RequestBody Method001ServB11Request method001ServB11Request
-//                                                             ,@RequestHeader(name = "Channel") String channelId
+    @PostMapping(value = "${servs.modules.bbb.services.serv-b11.endpoints.operations.method001-serv-b11}",
+                 consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Method001ServB11Resource> method001ServB11(@Valid @RequestBody Method001ServB11Request method001ServB11Request,
+                                                                     @RequestHeader(name = "Desc") String desc
     ) {
-        log.debug("POST method001ServB11()");
-        return ResponseEntity.ok(servB11Service.method001ServB11(method001ServB11Request));
+        log.debug("method001ServB11() POST");
+        ResponseEntity<Method001ServB11Resource> responce = ResponseEntity.ok(servB11Service.method001ServB11(method001ServB11Request, desc));
+        return responce;
     }
 
-    @GetMapping(value = "${servs.modules.bbb.endpoints.operations.method002-servB11}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "${servs.modules.bbb.services.serv-b11.endpoints.operations.method001-serv-b11}",
+                consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Method002ServB11Resource> method002ServB11(@RequestParam String id) {
-        log.debug("GET method002ServB11(): id=" + id);
+        log.debug("method002ServB11() GET: id=" + id);
         return ResponseEntity.ok(servB11Service.method002ServB11(id));
     }
 

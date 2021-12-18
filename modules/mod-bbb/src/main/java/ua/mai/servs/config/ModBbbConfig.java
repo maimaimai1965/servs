@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import ua.mai.servs.components.CustomFeignResponseLogging;
+import ua.mai.servs.components.FeignRequestResponseLogger;
 import ua.mai.servs.components.RestExceptionHandler;
 //import org.apache.cxf.Bus;
 //import org.springframework.security.authentication.AuthenticationManager;
@@ -43,8 +43,8 @@ public class ModBbbConfig { //extends WsConfiguration {
 //    }
 
     @Bean
-    public CustomFeignResponseLogging customFeignRequestLogging() {
-        return new CustomFeignResponseLogging();
+    public FeignRequestResponseLogger customFeignRequestLogging() {
+        return new FeignRequestResponseLogger();
     }
 
     @Bean

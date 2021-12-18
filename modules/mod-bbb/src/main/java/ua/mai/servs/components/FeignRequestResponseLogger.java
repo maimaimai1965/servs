@@ -2,27 +2,27 @@ package ua.mai.servs.components;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import feign.*;
+import feign.Logger;
+import feign.Request;
+import feign.Response;
+import feign.Util;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-//import ua.telesens.o320.trt.integration.bss.config.BusinessLog;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Optional;
 
 import static feign.Util.UTF_8;
 import static feign.Util.decodeOrDefault;
-import static net.logstash.logback.marker.Markers.*;
 
 @Component
 @Slf4j
-public class CustomFeignResponseLogging extends Logger {
+public class FeignRequestResponseLogger extends Logger {
 
 //    private final MiddlewareProps middlewareProps;
 //    private final IntegrationProps integrationProps;
@@ -46,16 +46,43 @@ public class CustomFeignResponseLogging extends Logger {
 
     @Override
     protected void logRequest(String configKey, Level logLevel, Request request) {
-        Optional.ofNullable(request.body()).ifPresentOrElse(bytes -> {
-            JsonElement jsonElement = JsonParser.parseString(decodeOrDefault(request.body(), UTF_8, "Binary data"));
-            log.info("Request to Middleware", append("url", request.url()), append("body", new Gson().fromJson(jsonElement.toString(), HashMap.class)));
-        }, () -> {
-            log.info("Request to Middleware", append("url", request.url()));
-        });
+//        super.logRequest(configKey, logLevel, request);
+        if (log.isDebugEnabled()) {
+            Optional.ofNullable(request.body()).ifPresentOrElse(bytes -> {
+                JsonElement jsonElement = JsonParser.parseString(decodeOrDefault(request.body(), UTF_8, "Binary data"));
+                log.debug("  REQ_OUT -> {}: {} {} body=[{}] ", request.requestTemplate().feignTarget().name(),
+                      request.httpMethod().name(), request.url(), new Gson().fromJson(jsonElement.toString(), HashMap.class));
+//                log.info("REQ_OUT", append("url", request.url()), append("body", new Gson().fromJson(jsonElement.toString(), HashMap.class)));
+            }, () -> {
+                log.debug("REQ_OUT -> {}: {} {}", request.requestTemplate().feignTarget().name(), request.httpMethod().name(),
+                      request.url());
+//                log.info("REQ_OUT", append("url", request.url()));
+            });
+        }
     }
 
     @Override
     protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response, long elapsedTime) throws IOException {
+        if (log.isDebugEnabled()) {
+            int bodyLength = 0;
+            int status = response.status();
+            if (response.body() != null && !(status == 204 || status == 205)) {
+                // HTTP 204 No Content "...response MUST NOT include a message-body"
+                // HTTP 205 Reset Content "...response MUST NOT include an entity"
+                byte[] bodyData = Util.toByteArray(response.body().asInputStream());
+                bodyLength = bodyData.length;
+                if (bodyLength > 0) {
+                    log.debug("  RESP_IN <- {}: {} {} {} body=[{}]", response.request().requestTemplate().feignTarget().name(),
+                          status, response.request().httpMethod().name(), response.request().url(),
+                          decodeOrDefault(bodyData, UTF_8, "Binary data"));
+                }
+                return response.toBuilder().body(bodyData).build();
+            } else {
+                log.debug("RESP_IN <- {}: {} {} {}", response.request().requestTemplate().feignTarget().name(),
+                      status, response.request().httpMethod().name(), response.request().url());
+                log(configKey, "<--- END HTTP (%s-byte body)", bodyLength);
+            }
+        }
         return response;
 //        MiddlewareProps.OperationMethodUri operationProps = operationProps(response.request().requestTemplate());
 //        BusinessLog.Operation operation = operationProps == null ? BusinessLog.Operation.NOTDEFINED :
@@ -175,8 +202,18 @@ public class CustomFeignResponseLogging extends Logger {
 //    }
 
     @Override
+    protected IOException logIOException(String configKey, Level logLevel, IOException ioe, long elapsedTime) {
+        log.info( "  ERROR %s: %s (%sms)", ioe.getClass().getSimpleName(), ioe.getMessage(), elapsedTime);
+        if (log.isDebugEnabled()) {
+            StringWriter sw = new StringWriter();
+            ioe.printStackTrace(new PrintWriter(sw));
+            log.debug("%s", sw.toString());
+        }
+        return ioe;
+    }
+
+    @Override
     protected void log(String configKey, String format, Object... args) {
-        int i =1;
     }
 
 }

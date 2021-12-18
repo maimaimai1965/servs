@@ -13,7 +13,10 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class Method001ServB11Request {
     @NotNull
+    private String id;
+    @NotNull
     private String state;
+    private String service;
 //    @Valid
 //    @NotNull
 //    @Size(min = 1)

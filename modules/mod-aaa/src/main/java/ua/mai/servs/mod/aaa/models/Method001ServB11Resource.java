@@ -1,4 +1,4 @@
-package ua.mai.servs.mod.bbb.models;
+package ua.mai.servs.mod.aaa.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

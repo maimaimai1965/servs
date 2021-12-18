@@ -39,17 +39,20 @@ feign:
 servs:
   modules:
     aaa:
-      host: localhost
-      port: 5001
-      endpoints:
-        operations:
-          method001-servA01: /servs/api/servsA01/v1/method001ServA01
-          method002-servA01: /servs/api/servsA01/v1/method002ServA01
-      operation-method-uri:
+      url: http://localhost:5001
+      services:
+        serv-a01:
+          endpoints:
+            operations:
+              method001-serv-a01: /servs/api/servA01/v1/method001ServA01
+              method002-serv-a01: /servs/api/servA01/v1/method002ServA01
+              method003-serv-a01: /servs/api/servA01/v1/method003ServA01
+            operation-method-uri:
     bbb:
-      host: localhost
-      port: 5002
-      endpoints:
-        operations:
-          method001-servB11: /servs/api/servsB11/v1/method001ServB11
-          method002-servB11: /servs/api/servsB11/v1/method002ServB11
+      url: http://localhost:5002
+      services:
+        serv-b11:
+          endpoints:
+            operations:
+              method001-serv-b11: /servs/api/servB11/v1/method001ServB11
+              method002-serv-b11: /servs/api/servB11/v1/method002ServB11

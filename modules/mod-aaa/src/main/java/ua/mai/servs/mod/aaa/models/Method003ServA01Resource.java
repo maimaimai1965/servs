@@ -1,4 +1,4 @@
-package ua.mai.servs.mod.bbb.models;
+package ua.mai.servs.mod.aaa.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Method001ServB11Resource {
-    private String id;
+public class Method003ServA01Resource {
+    private String name;
     private String state;
     private String desc;
 //    private List<RelatedPartyResource> relatedParty;

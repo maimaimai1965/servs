@@ -2,10 +2,16 @@ package ua.mai.servs.mod.aaa.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.mai.servs.mod.aaa.models.Method001ServA01Resource;
+import ua.mai.servs.mod.aaa.models.Method001ServB11Resource;
 import ua.mai.servs.mod.aaa.models.Method002ServA01Resource;
+import ua.mai.servs.mod.aaa.models.Method003ServA01Resource;
 import ua.mai.servs.mod.aaa.payloads.Method001ServA01Request;
+import ua.mai.servs.mod.aaa.payloads.Method001ServB11Request;
+import ua.mai.servs.mod.aaa.payloads.Method003ServA01Request;
+
 import javax.annotation.PostConstruct;
 
 @Slf4j
@@ -13,10 +19,12 @@ import javax.annotation.PostConstruct;
 public class ServA01Service {
 
     private ServA02Service servA02;
+    private ServB11Service servB11;
 
     @Autowired
-    public ServA01Service(ServA02Service servA02) {
+    public ServA01Service(ServA02Service servA02, ServB11Service servB11) {
         this.servA02 = servA02;
+        this.servB11 = servB11;
     }
 
     @PostConstruct
@@ -82,6 +90,7 @@ public class ServA01Service {
         return resource;
     }
 
+    /* Вызов метода method001ServA02 локального сервиса ServA02. */
     public Method002ServA01Resource method002ServA01(String id) {
         log.debug("method002ServA01(): id=" + id);
         String processedId = servA02.method001ServA02(id);
@@ -91,8 +100,27 @@ public class ServA01Service {
         return resource;
     }
 
+    /* Вызов метода method001ServB11 внешнего сервиса ServB11. */
+    public Method003ServA01Resource method003ServA01(Method003ServA01Request method003ServA01Request) {
+        log.debug("method003ServA01(): name=" + method003ServA01Request.getName());
+        Method001ServB11Resource resourceServB11 =
+              servB11.method001ServB11(
+                    Method001ServB11Request.builder()
+                          .id(method003ServA01Request.getName())
+                          .state(method003ServA01Request.getState())
+                          .service("ServA01")
+                          .build(),
+                    "Wow!");
+        Method003ServA01Resource resource = Method003ServA01Resource.builder()
+              .name(method003ServA01Request.getName())
+              .state(method003ServA01Request.getState())
+              .desc(resourceServB11.getDesc())
+              .build();
+        return resource;
+    }
 
-//    private void deAndActivationCallback(String id, DelayTosOcsIdTuple delay, String
+
+    //    private void deAndActivationCallback(String id, DelayTosOcsIdTuple delay, String
 //            eventType, String eventTime, String errorKey, String msisdn) {
 //        final String result, tos, ocsId;
 //        if (eventType.equals(middlewareProps.getEventType().getActivationEvent()) ||

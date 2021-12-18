@@ -1,6 +1,7 @@
 package ua.mai.servs.mod.bbb.services;
 
 import lombok.extern.slf4j.Slf4j;
+import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.mai.servs.mod.bbb.models.Method001ServB11Resource;
@@ -73,10 +74,18 @@ public class ServB11Service {
 //        });
     }
 
-    public Method001ServB11Resource method001ServB11(Method001ServB11Request method001ServB11Request) {
-        log.debug("method001ServB11(): state=" + method001ServB11Request.getState());
+    public Method001ServB11Resource method001ServB11(Method001ServB11Request method001ServB11Request, String desc) {
+        log.debug("method001ServB11(): id=" + method001ServB11Request.getId());
+        String service = method001ServB11Request.getService();
+        if (!StringUtils.isEmpty(service)) {
+            desc = "from service " + service + (desc!=null ? "[" + desc + "]" : "");
+//            throw new ArrayIndexOutOfBoundsException();
+        } else {
+            desc = desc!=null ? "[" + desc + "]" : "";
+            throw new ArrayIndexOutOfBoundsException();
+        }
         Method001ServB11Resource resource = Method001ServB11Resource.builder()
-                .id(java.util.UUID.randomUUID().toString())
+                .desc(desc)
                 .state(method001ServB11Request.getState())
                 .build();
 //        log.debug("  return: method001Serv001Request.id=" + resource.getId());

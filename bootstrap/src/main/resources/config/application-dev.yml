@@ -1,10 +1,19 @@
+# module aaa
 logging.level.ua.mai.servs.mod.aaa.controllers: DEBUG
 logging.level.ua.mai.servs.mod.aaa.services: DEBUG
+# module bbb
+logging.level.ua.mai.servs.mod.bbb.controllers: DEBUG
+logging.level.ua.mai.servs.mod.bbb.services: DEBUG
+
+# Logging Feign Clients
+logging.level.ua.mai.servs.components.FeignRequestResponseLogger: DEBUG
 
 # For module aaa
 logging.level.ua.mai.servs.common.RequestResponseLogFilter: DEBUG
 
+
 logging.level.org.springframework.web.servlet: INFO
+
 logging.level.ua.mai.servs.config.CustomCommonsRequestLoggingFilter: INFO
 logging.level.ua.mai.servs.config.CustomResponseLoggingFilter: INFO
 logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter: INFO

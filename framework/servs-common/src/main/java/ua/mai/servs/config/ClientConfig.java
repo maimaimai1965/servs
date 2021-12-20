@@ -1,4 +1,4 @@
-package ua.mai.servs.common;
+package ua.mai.servs.config;
 
 import com.google.gson.GsonBuilder;
 import feign.codec.Decoder;

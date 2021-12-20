@@ -84,7 +84,7 @@ public class ServA01Service {
         log.debug("method001ServA01(): state=" + method001ServA01Request.getState());
         Method001ServA01Resource resource = Method001ServA01Resource.builder()
                 .id(java.util.UUID.randomUUID().toString())
-                .state(method001ServA01Request.getState())
+                .state("processed " + method001ServA01Request.getState())
                 .build();
 //        log.debug("  return: method001Serv001Request.id=" + resource.getId());
         return resource;

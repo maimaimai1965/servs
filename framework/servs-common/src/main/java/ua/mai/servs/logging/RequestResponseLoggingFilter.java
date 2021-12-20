@@ -1,4 +1,4 @@
-package ua.mai.servs.common;
+package ua.mai.servs.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @Slf4j
-public class RequestResponseLogFilter extends OncePerRequestFilter {
+public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
     public static final String DEFAULT_BEFORE_REQUEST_MESSAGE_PREFIX = "request start: ";
     public static final String DEFAULT_BEFORE_REQUEST_MESSAGE_SUFFIX = "";
@@ -85,18 +85,13 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
         }
         catch (Exception ex) {
             exception = ex;
+            log.debug("ERROR : {}", ex.getMessage());
             throw ex;
         }
         finally {
-            if (exception != null) {
-                log.debug("ERROR : {}", exception.getMessage());
-            }
-
             long duration = System.currentTimeMillis() - startTime;
 
             if (log.isDebugEnabled()) {
-                String message = "";
-
                 // I can only log the request's body AFTER the request has been made and ContentCachingRequestWrapper did its work.
                 if (includeRequestPayload) {
                     String requestBody = this.getContentAsString(wrappedRequest.getContentAsByteArray(), this.maxRequestPayloadLength,
@@ -108,7 +103,7 @@ public class RequestResponseLogFilter extends OncePerRequestFilter {
                 }
 
                 if (exception == null) {
-                    message = "";
+                    String message = "";
                     if (includeResponsePayload) {
                         message = "payload=[" + getContentAsString(wrappedResponse.getContentAsByteArray(), this.maxResponsePayloadLength,
                               response.getCharacterEncoding()) + "]";

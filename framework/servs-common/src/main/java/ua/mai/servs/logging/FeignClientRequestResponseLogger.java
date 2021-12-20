@@ -1,4 +1,4 @@
-package ua.mai.servs.components;
+package ua.mai.servs.logging;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -24,7 +24,7 @@ import static net.logstash.logback.marker.Markers.*;
 
 @Component
 @Slf4j
-public class FeignRequestResponseLogger extends Logger {
+public class FeignClientRequestResponseLogger extends Logger {
 
 //    private final MiddlewareProps middlewareProps;
 //    private final IntegrationProps integrationProps;

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import ua.mai.servs.mod.bbb.models.Method001ServB11Resource;
 import ua.mai.servs.mod.bbb.models.Method002ServB11Resource;
 import ua.mai.servs.mod.bbb.payloads.Method001ServB11Request;
@@ -82,7 +83,7 @@ public class ServB11Service {
 //            throw new ArrayIndexOutOfBoundsException();
         } else {
             desc = desc!=null ? "[" + desc + "]" : "";
-            throw new ArrayIndexOutOfBoundsException();
+//            throw new ArrayIndexOutOfBoundsException();
         }
         Method001ServB11Resource resource = Method001ServB11Resource.builder()
                 .desc(desc)

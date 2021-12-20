@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import ua.mai.servs.components.FeignRequestResponseLogger;
-import ua.mai.servs.components.RestExceptionHandler;
+import ua.mai.servs.components.CustomResponseEntityExceptionHandler;
+import ua.mai.servs.logging.FeignClientRequestResponseLogger;
 //import org.apache.cxf.Bus;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import ua.telesens.o320.tif.core.ws.WsConfiguration;
@@ -20,7 +20,7 @@ import ua.mai.servs.components.RestExceptionHandler;
 @Import(value = {
 //        ClientConfig.class,
 //        IntegrationClientConfig.class,
-        RequestLoggingFilterConfig.class,
+      RequestResponseLoggingFilterConfig.class,
 })
 @Configuration
 @ComponentScan("ua.mai.servs.mod.bbb")
@@ -43,12 +43,12 @@ public class ModBbbConfig { //extends WsConfiguration {
 //    }
 
     @Bean
-    public FeignRequestResponseLogger customFeignRequestLogging() {
-        return new FeignRequestResponseLogger();
+    public FeignClientRequestResponseLogger customFeignRequestLogging() {
+        return new FeignClientRequestResponseLogger();
     }
 
     @Bean
-    public RestExceptionHandler restExceptionHandler() {
-        return new RestExceptionHandler();
+    public CustomResponseEntityExceptionHandler restExceptionHandler() {
+        return new CustomResponseEntityExceptionHandler();
     }
 }

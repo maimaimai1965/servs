@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import ua.mai.servs.common.ClientConfig;
-import ua.mai.servs.components.FeignRequestResponseLogger;
-import ua.mai.servs.components.RestExceptionHandler;
-import ua.mai.servs.config.RequestLoggingFilterConfig;
+import ua.mai.servs.config.ClientConfig;
+import ua.mai.servs.logging.FeignClientRequestResponseLogger;
+import ua.mai.servs.components.CustomResponseEntityExceptionHandler;
+import ua.mai.servs.config.RequestResponseLoggingFilterConfig;
 import ua.mai.servs.mod.aaa.clients.ServB11Props;
 //ua.mai.servs.common
 //import org.apache.cxf.Bus;
@@ -26,7 +26,7 @@ import ua.mai.servs.mod.aaa.clients.ServB11Props;
 @Import(value = {
 //        ClientConfig.class,
 //        IntegrationClientConfig.class,
-        RequestLoggingFilterConfig.class,
+        RequestResponseLoggingFilterConfig.class,
         ClientConfig.class
 
 })
@@ -53,12 +53,12 @@ public class ModAaaConfig { //extends WsConfiguration {
 //    }
 
     @Bean
-    public FeignRequestResponseLogger customFeignRequestLogging() {
-        return new FeignRequestResponseLogger();
+    public FeignClientRequestResponseLogger customFeignRequestLogging() {
+        return new FeignClientRequestResponseLogger();
     }
 
     @Bean
-    public RestExceptionHandler restExceptionHandler() {
-        return new RestExceptionHandler();
+    public CustomResponseEntityExceptionHandler restExceptionHandler() {
+        return new CustomResponseEntityExceptionHandler();
     }
 }

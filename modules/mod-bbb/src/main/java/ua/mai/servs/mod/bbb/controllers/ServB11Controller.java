@@ -5,12 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+import ua.mai.servs.exceptions.ResourceNotFoundException;
+import ua.mai.servs.exceptions.UnauthorizedException;
 import ua.mai.servs.mod.bbb.models.Method001ServB11Resource;
 import ua.mai.servs.mod.bbb.models.Method002ServB11Resource;
 import ua.mai.servs.mod.bbb.payloads.Method001ServB11Request;
 import ua.mai.servs.mod.bbb.services.ServB11Service;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 @RestController
@@ -28,10 +32,13 @@ public class ServB11Controller {
                  consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Method001ServB11Resource> method001ServB11(@Valid @RequestBody Method001ServB11Request method001ServB11Request,
                                                                      @RequestHeader(name = "Desc") String desc
-    ) {
+    ) throws HttpMediaTypeNotSupportedException {
         log.debug("method001ServB11() POST");
-        ResponseEntity<Method001ServB11Resource> responce = ResponseEntity.ok(servB11Service.method001ServB11(method001ServB11Request, desc));
-        return responce;
+//throw new UnauthorizedException("TEST", new ArrayIndexOutOfBoundsException());
+throw new HttpMediaTypeNotSupportedException("");
+//throw new ArrayIndexOutOfBoundsException();
+//        ResponseEntity<Method001ServB11Resource> responce = ResponseEntity.ok(servB11Service.method001ServB11(method001ServB11Request, desc));
+//        return responce;
     }
 
     @GetMapping(value = "${servs.modules.bbb.services.serv-b11.endpoints.operations.method001-serv-b11}",

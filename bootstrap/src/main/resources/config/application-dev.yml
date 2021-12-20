@@ -1,16 +1,17 @@
-# module aaa
+# Logging module aaa methods
 logging.level.ua.mai.servs.mod.aaa.controllers: DEBUG
 logging.level.ua.mai.servs.mod.aaa.services: DEBUG
-# module bbb
+# Logging module bbb methods
 logging.level.ua.mai.servs.mod.bbb.controllers: DEBUG
 logging.level.ua.mai.servs.mod.bbb.services: DEBUG
 
 # Logging Feign Clients
 logging.level.ua.mai.servs.components.FeignRequestResponseLogger: DEBUG
 
-# For module aaa
-logging.level.ua.mai.servs.common.RequestResponseLogFilter: DEBUG
-
+# Logging request/response to/from services
+logging.level.ua.mai.servs.logging.RequestResponseLoggingFilter: DEBUG
+# Logging errors in services
+logging.level.ua.mai.servs.components.RestExceptionHandler: DEBUG
 
 logging.level.org.springframework.web.servlet: INFO
 

@@ -11,13 +11,11 @@ import ua.mai.servs.common.AppUtil;
 import ua.mai.servs.bootstrap.config.DefaultProfileUtil;
 import ua.mai.servs.mod.aaa.config.ModAaaConfig;
 
-@EnableFeignClients(basePackages = {"ua.mai.servs.mod.aaa.clients"})
+@EnableFeignClients(basePackages = {"ua.mai.servs.clients"})
 @SpringBootApplication(
         scanBasePackageClasses = {
-//                AaClientConfiguration.class,
                 ModAaaConfig.class,
         }, exclude = {SecurityAutoConfiguration.class})
-//@SpringBootApplication(scanBasePackages = "ua.mai.servs.mod.aaa")
 public class ModAaaApplication {
 
     private static final Logger log = LoggerFactory.getLogger(ModAaaApplication.class);

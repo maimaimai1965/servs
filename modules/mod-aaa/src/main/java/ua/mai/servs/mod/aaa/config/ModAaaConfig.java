@@ -1,15 +1,18 @@
 package ua.mai.servs.mod.aaa.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import ua.mai.servs.clients.bbb.ServB11Client;
+import ua.mai.servs.clients.bbb.ServB11Service;
 import ua.mai.servs.config.ClientConfig;
 import ua.mai.servs.logging.FeignClientRequestResponseLogger;
 import ua.mai.servs.components.CustomResponseEntityExceptionHandler;
 import ua.mai.servs.config.RequestResponseLoggingFilterConfig;
-import ua.mai.servs.mod.aaa.clients.ServB11Props;
+import ua.mai.servs.clients.bbb.ServB11Props;
 //ua.mai.servs.common
 //import org.apache.cxf.Bus;
 //import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +36,8 @@ import ua.mai.servs.mod.aaa.clients.ServB11Props;
 @EnableConfigurationProperties({
       ModAaaProps.class,
       ServB11Props.class})
-@ComponentScan("ua.mai.servs.mod.aaa")
+@ComponentScan(basePackages={"ua.mai.servs.mod.aaa",
+                             "ua.mai.servs.clients"})
 public class ModAaaConfig { //extends WsConfiguration {
 
 
@@ -52,6 +56,13 @@ public class ModAaaConfig { //extends WsConfiguration {
 //        return new DoogiesRequestLogger();
 //    }
 
+
+//    @Bean
+//    public ServB11Service servB11Service(ServB11Client servB11Client) {
+//        return new ServB11Service(servB11Client);
+//    }
+
+
     @Bean
     public FeignClientRequestResponseLogger customFeignRequestLogging() {
         return new FeignClientRequestResponseLogger();
@@ -61,4 +72,5 @@ public class ModAaaConfig { //extends WsConfiguration {
     public CustomResponseEntityExceptionHandler restExceptionHandler() {
         return new CustomResponseEntityExceptionHandler();
     }
+
 }

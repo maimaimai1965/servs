@@ -135,7 +135,22 @@
             </dependency>
             <dependency>
                 <groupId>ua.mai.servs</groupId>
+                <artifactId>mod-aaa-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ua.mai.servs</groupId>
                 <artifactId>mod-bbb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ua.mai.servs</groupId>
+                <artifactId>mod-bbb-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ua.mai.servs</groupId>
+                <artifactId>mod-bbb-clients</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -7,14 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.*;
-import ua.mai.servs.exceptions.ResourceNotFoundException;
-import ua.mai.servs.exceptions.UnauthorizedException;
 import ua.mai.servs.mod.bbb.models.Method001ServB11Resource;
 import ua.mai.servs.mod.bbb.models.Method002ServB11Resource;
 import ua.mai.servs.mod.bbb.payloads.Method001ServB11Request;
 import ua.mai.servs.mod.bbb.services.ServB11Service;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 @RestController

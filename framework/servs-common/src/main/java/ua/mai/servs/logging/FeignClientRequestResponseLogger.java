@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.net.ConnectException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -205,11 +206,13 @@ public class FeignClientRequestResponseLogger extends Logger {
 
     @Override
     protected IOException logIOException(String configKey, Level logLevel, IOException ioe, long elapsedTime) {
-        log.info( "  ERROR %s: %s (%sms)", ioe.getClass().getSimpleName(), ioe.getMessage(), elapsedTime);
-        if (log.isDebugEnabled()) {
-            StringWriter sw = new StringWriter();
-            ioe.printStackTrace(new PrintWriter(sw));
-            log.debug("%s", sw.toString());
+        log.info("  ERROR {}: {} (}ms)", ioe.getClass().getSimpleName(), ioe.getMessage(), elapsedTime);
+        if (!(ioe instanceof ConnectException)) {
+            if (log.isDebugEnabled()) {
+                StringWriter sw = new StringWriter();
+                ioe.printStackTrace(new PrintWriter(sw));
+                log.debug("%s", sw.toString());
+            }
         }
         return ioe;
     }

@@ -1,4 +1,4 @@
-package ua.mai.servs.mod.aaa.clients;
+package ua.mai.servs.clients.bbb;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

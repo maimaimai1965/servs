@@ -15,6 +15,9 @@
 
     <modules>
         <module>mod-aaa</module>
+        <module>mod-aaa-api</module>
         <module>mod-bbb</module>
+        <module>mod-bbb-api</module>
+        <module>mod-bbb-clients</module>
     </modules>
 </project>

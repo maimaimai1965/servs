@@ -1,4 +1,4 @@
-package ua.mai.servs.mod.aaa.clients;
+package ua.mai.servs.clients.bbb;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import ua.mai.servs.config.ClientConfig;
-import ua.mai.servs.mod.aaa.models.Method001ServB11Resource;
-import ua.mai.servs.mod.aaa.payloads.Method001ServB11Request;
+import ua.mai.servs.mod.bbb.models.Method001ServB11Resource;
+import ua.mai.servs.mod.bbb.payloads.Method001ServB11Request;
 
 import javax.validation.Valid;
 

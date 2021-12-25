@@ -6,7 +6,7 @@ logging.level.ua.mai.servs.mod.bbb.controllers: DEBUG
 logging.level.ua.mai.servs.mod.bbb.services: DEBUG
 
 # Logging Feign Clients
-logging.level.ua.mai.servs.components.FeignRequestResponseLogger: DEBUG
+logging.level.ua.mai.servs.logging.FeignClientRequestResponseLogger: DEBUG
 
 # Logging request/response to/from services
 logging.level.ua.mai.servs.logging.RequestResponseLoggingFilter: DEBUG

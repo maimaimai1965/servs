@@ -11,7 +11,7 @@
 
     <artifactId>framework</artifactId>
     <packaging>pom</packaging>
-    <name>SERVS-FRAMEWORK</name>
+    <name>SERVS:FRAMEWORK</name>
     <description>SERVS :: framework</description>
 
     <modules>

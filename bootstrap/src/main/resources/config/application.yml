@@ -56,3 +56,12 @@ servs:
             operations:
               method001-serv-b11: /servs/api/servB11/v1/method001ServB11
               method002-serv-b11: /servs/api/servB11/v1/method002ServB11
+      jwt:
+        secret: MIICCgKCAgEAu9r5sLpyNSH618apltlGeZ59pYmdUKScA8h6MiVT2dU9g/IVdv7d
+        type: JWT
+        issuer: Mock
+        audience: Test
+        token-type: bearer
+        expires-in: 43199
+        scope: openid
+        tenant: XM

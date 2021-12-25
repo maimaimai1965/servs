@@ -23,6 +23,18 @@
             <artifactId>servs-common</artifactId>
 <!--            <scope>provided</scope>-->
         </dependency>
+        <dependency>
+            <groupId>ua.mai.servs</groupId>
+            <artifactId>mod-aaa-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ua.mai.servs</groupId>
+            <artifactId>mod-bbb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ua.mai.servs</groupId>
+            <artifactId>mod-bbb-clients</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

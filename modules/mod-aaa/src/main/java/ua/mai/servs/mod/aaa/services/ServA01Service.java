@@ -2,15 +2,15 @@ package ua.mai.servs.mod.aaa.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ua.mai.servs.clients.bbb.ServB11Service;
 import ua.mai.servs.mod.aaa.models.Method001ServA01Resource;
-import ua.mai.servs.mod.aaa.models.Method001ServB11Resource;
 import ua.mai.servs.mod.aaa.models.Method002ServA01Resource;
 import ua.mai.servs.mod.aaa.models.Method003ServA01Resource;
 import ua.mai.servs.mod.aaa.payloads.Method001ServA01Request;
-import ua.mai.servs.mod.aaa.payloads.Method001ServB11Request;
 import ua.mai.servs.mod.aaa.payloads.Method003ServA01Request;
+import ua.mai.servs.mod.bbb.models.Method001ServB11Resource;
+import ua.mai.servs.mod.bbb.payloads.Method001ServB11Request;
 
 import javax.annotation.PostConstruct;
 

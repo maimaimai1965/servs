@@ -5,13 +5,16 @@ logging.level.ua.mai.servs.mod.aaa.services: DEBUG
 logging.level.ua.mai.servs.mod.bbb.controllers: DEBUG
 logging.level.ua.mai.servs.mod.bbb.services: DEBUG
 
-# Logging Feign Clients
+# Logging request from and response to Feign Clients
 logging.level.ua.mai.servs.logging.FeignClientRequestResponseLogger: DEBUG
 
-# Logging request/response to/from services
+# Logging request to and response from services
 logging.level.ua.mai.servs.logging.RequestResponseLoggingFilter: DEBUG
 # Logging errors in services
 logging.level.ua.mai.servs.components.RestExceptionHandler: DEBUG
+
+# Logging user Basic authentication
+logging.level.ua.mai.servs.mod.bbb.security.services.BasicTokenService: DEBUG
 
 logging.level.org.springframework.web.servlet: INFO
 

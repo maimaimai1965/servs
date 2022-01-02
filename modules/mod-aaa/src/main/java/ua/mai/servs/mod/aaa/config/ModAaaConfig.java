@@ -1,18 +1,22 @@
 package ua.mai.servs.mod.aaa.config;
 
+import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import ua.mai.servs.clients.bbb.ServB11Client;
-import ua.mai.servs.clients.bbb.ServB11Service;
+import ua.mai.servs.clients.AuthClient;
+import ua.mai.servs.components.AccessTokenProvider;
+import ua.mai.servs.components.FeignClientInterceptor;
 import ua.mai.servs.config.ClientConfig;
 import ua.mai.servs.logging.FeignClientRequestResponseLogger;
 import ua.mai.servs.components.CustomResponseEntityExceptionHandler;
 import ua.mai.servs.config.RequestResponseLoggingFilterConfig;
 import ua.mai.servs.clients.bbb.ServB11Props;
+import ua.mai.servs.props.AuthLogProperties;
+import ua.mai.servs.services.AuthService;
 //ua.mai.servs.common
 //import org.apache.cxf.Bus;
 //import org.springframework.security.authentication.AuthenticationManager;
@@ -31,11 +35,12 @@ import ua.mai.servs.clients.bbb.ServB11Props;
 //        IntegrationClientConfig.class,
         RequestResponseLoggingFilterConfig.class,
         ClientConfig.class
-
 })
 @EnableConfigurationProperties({
       ModAaaProps.class,
-      ServB11Props.class})
+      ServB11Props.class,
+      AuthLogProperties.class
+})
 @ComponentScan(basePackages={"ua.mai.servs.mod.aaa",
                              "ua.mai.servs.clients"})
 public class ModAaaConfig { //extends WsConfiguration {
@@ -62,6 +67,23 @@ public class ModAaaConfig { //extends WsConfiguration {
 //        return new ServB11Service(servB11Client);
 //    }
 
+
+    @Bean
+    public RequestInterceptor feignClientInterceptor() {
+        return new FeignClientInterceptor();
+    }
+
+    @Bean
+    public AuthService authService(@Autowired AuthClient authClient) {
+        return new AuthService(authClient);
+    }
+
+    @Bean
+    public AccessTokenProvider accessTokenProvider(@Autowired AuthService authService) {
+        return new AccessTokenProvider(authService
+              //              , middlewareProps
+        );
+    }
 
     @Bean
     public FeignClientRequestResponseLogger customFeignRequestLogging() {

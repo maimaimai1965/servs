@@ -1,6 +1,7 @@
 package ua.mai.servs.logging;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -25,6 +26,10 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
     public static final String DEFAULT_RESPONSE_MESSAGE_SUFFIX = "";
     private static final int DEFAULT_MAX_RESPONSE_PAYLOAD_LENGTH = 100;
 
+    public static final boolean DEFAULT_AUTH_LOG_ACTIVE = true;
+    public static final boolean DEFAULT_AUTH_LOG_PAYLOAD = false;
+    public static final String DEFAULT_AUTH_LOG_AUTH_URI_PART = "/auth/";
+
     private String beforeRequestMessagePrefix = DEFAULT_BEFORE_REQUEST_MESSAGE_PREFIX;
     private String beforeRequestMessageSuffix = DEFAULT_BEFORE_REQUEST_MESSAGE_SUFFIX;
     private String afterRequestMessagePrefix = DEFAULT_AFTER_REQUEST_MESSAGE_PREFIX;
@@ -37,6 +42,10 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
     private boolean includeResponsePayload = true;
     private int maxResponsePayloadLength = DEFAULT_MAX_RESPONSE_PAYLOAD_LENGTH;
     private boolean showRunTime = true;
+
+    private boolean authLogActive = DEFAULT_AUTH_LOG_ACTIVE;
+    private boolean authLogPayload = DEFAULT_AUTH_LOG_PAYLOAD;
+    private String authLogAuthUriPart = DEFAULT_AUTH_LOG_AUTH_URI_PART;
 
     /**
      * Log each request and respponse with full Request URI, content payload and duration of the request in ms.
@@ -68,7 +77,9 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 //                  .append(request.getUserPrincipal().getName());
 //        }
 
-        if (log.isDebugEnabled()) {
+        boolean authRequest = Strings.isNotEmpty(authLogAuthUriPart) && request.getRequestURI().contains(authLogAuthUriPart);
+
+        if (log.isDebugEnabled() && (!authRequest || authLogActive)) {
             log.debug(beforeRequestMessagePrefix + reqInfo.append(beforeRequestMessageSuffix));
         }
 
@@ -91,9 +102,9 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
         finally {
             long duration = System.currentTimeMillis() - startTime;
 
-            if (log.isDebugEnabled()) {
+            if (log.isDebugEnabled() && (!authRequest || authLogActive)) {
                 // I can only log the request's body AFTER the request has been made and ContentCachingRequestWrapper did its work.
-                if (includeRequestPayload) {
+                if ((!authRequest) && includeRequestPayload || authRequest && authLogPayload) {
                     String requestBody = this.getContentAsString(wrappedRequest.getContentAsByteArray(), this.maxRequestPayloadLength,
                           request.getCharacterEncoding());
                     if (requestBody.length() > 0) {
@@ -104,7 +115,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
                 if (exception == null) {
                     String message = "";
-                    if (includeResponsePayload) {
+                    if ((!authRequest) && includeResponsePayload || authRequest && authLogPayload) {
                         message = "payload=[" + getContentAsString(wrappedResponse.getContentAsByteArray(), this.maxResponsePayloadLength,
                               response.getCharacterEncoding()) + "]";
                     }
@@ -157,6 +168,18 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
     public void setShowRunTime(boolean showRunTime) {
         this.showRunTime = showRunTime;
+    }
+
+    public void setAuthLogActive(boolean authLogActive) {
+        this.authLogActive = authLogActive;
+    }
+
+    public void setAuthLogPayload(boolean authLogPayload) {
+        this.authLogPayload = authLogPayload;
+    }
+
+    public void setAuthLogAuthUriPart(String authLogAuthUriPart) {
+        this.authLogAuthUriPart = authLogAuthUriPart;
     }
 
     private String getContentAsString(byte[] buf, int maxLength, String charsetName) {

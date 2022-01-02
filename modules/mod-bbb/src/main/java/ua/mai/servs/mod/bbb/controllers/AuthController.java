@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.mai.servs.mod.bbb.payloads.Authentication;
-import ua.mai.servs.mod.bbb.services.BasicTokenService;
+import ua.mai.servs.mod.bbb.security.services.BasicTokenService;
 
 @RestController
 public class AuthController {
@@ -19,7 +19,7 @@ public class AuthController {
         this.basicTokenService = basicTokenService;
     }
 
-    @PostMapping(value = "${middleware.endpoints.operations.login}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "${servs.modules.bbb.auth-jwt.endpoint}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Authentication> authentication(@RequestHeader(value = "Authorization") String authorizationHeader,
                                                          @RequestParam(required = false, name = "grant_type") String grantType) {
         return ResponseEntity.ok(basicTokenService.getUserPayload(authorizationHeader));

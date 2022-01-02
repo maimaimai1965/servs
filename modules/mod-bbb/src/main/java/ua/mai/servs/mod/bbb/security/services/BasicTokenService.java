@@ -1,5 +1,6 @@
-package ua.mai.servs.mod.bbb.services;
+package ua.mai.servs.mod.bbb.security.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.mai.servs.mod.bbb.payloads.Authentication;
@@ -9,6 +10,7 @@ import ua.mai.servs.models.User;
 import java.util.AbstractMap;
 import java.util.Base64;
 
+@Slf4j
 @Service
 public class BasicTokenService {
 
@@ -28,6 +30,8 @@ public class BasicTokenService {
 
     public Authentication getUserPayload(String token) {
         User user = parseToken(token);
+        // TODO Определение ролей доступных пользователю
+        log.debug("Authenticate user '" + user.getUsername() + "'");
         AbstractMap.SimpleImmutableEntry<String, String> accessToken = jwtTokenService.generateToken(user);
         return new Authentication(accessToken.getValue(),
                 jwtProperties.getTokenType(), jwtProperties.getExpiresIn().getSeconds(), jwtProperties.getScope(),

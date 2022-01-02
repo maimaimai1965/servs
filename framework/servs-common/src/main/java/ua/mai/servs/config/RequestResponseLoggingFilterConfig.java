@@ -3,6 +3,7 @@ package ua.mai.servs.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ua.mai.servs.logging.RequestResponseLoggingFilter;
+import ua.mai.servs.props.AuthLogProperties;
 
 @Configuration
 public class RequestResponseLoggingFilterConfig {
@@ -23,7 +24,7 @@ public class RequestResponseLoggingFilterConfig {
 //    }
 
     @Bean
-    public RequestResponseLoggingFilter logFilter() {
+    public RequestResponseLoggingFilter logFilter(AuthLogProperties authLogProperties) {
         RequestResponseLoggingFilter filter = new RequestResponseLoggingFilter();
         filter.setBeforeRequestMessagePrefix("REQ_IN (start)  : ");
         filter.setBeforeRequestMessageSuffix("");
@@ -36,6 +37,11 @@ public class RequestResponseLoggingFilterConfig {
         filter.setResponseMessageSuffix("");
         filter.setIncludeResponsePayload(true);
         filter.setMaxResponsePayloadLength(10000);
+
+        filter.setAuthLogActive(authLogProperties.isActive());
+        filter.setAuthLogPayload(authLogProperties.isPayload());
+        filter.setAuthLogAuthUriPart(authLogProperties.getAuthUriPart());
+
         return filter;
     }
 }

@@ -32,10 +32,10 @@ public class ServB11Controller {
     ) throws HttpMediaTypeNotSupportedException {
         log.debug("method001ServB11() POST");
 //throw new UnauthorizedException("TEST", new ArrayIndexOutOfBoundsException());
-throw new HttpMediaTypeNotSupportedException("");
+//throw new HttpMediaTypeNotSupportedException("");
 //throw new ArrayIndexOutOfBoundsException();
-//        ResponseEntity<Method001ServB11Resource> responce = ResponseEntity.ok(servB11Service.method001ServB11(method001ServB11Request, desc));
-//        return responce;
+        ResponseEntity<Method001ServB11Resource> responce = ResponseEntity.ok(servB11Service.method001ServB11(method001ServB11Request, desc));
+        return responce;
     }
 
     @GetMapping(value = "${servs.modules.bbb.services.serv-b11.endpoints.operations.method001-serv-b11}",

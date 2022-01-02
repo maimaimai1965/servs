@@ -1,4 +1,4 @@
-package ua.mai.servs.mod.bbb.services;
+package ua.mai.servs.mod.bbb.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
     private final UrlPathHelper urlPathHelper = new UrlPathHelper();
 

@@ -1,9 +1,10 @@
-package ua.mai.servs.mod.bbb.services;
+package ua.mai.servs.mod.bbb.security;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ua.mai.servs.mod.bbb.security.services.TokenService;
 import ua.mai.servs.models.UserPrincipal;
 
 import javax.servlet.FilterChain;
@@ -14,10 +15,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class JwtAuthTokenFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
 
-    public JwtAuthFilter(TokenService tokenService) {
+    public JwtAuthTokenFilter(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 
@@ -26,10 +27,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws IOException, ServletException {
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
-        if (authorizationHeaderIsInvalid(authorizationHeader)) {
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
-            return;
-        }
+//        try {
+            if (authorizationHeaderIsInvalid(authorizationHeader)) {
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+//        } catch (CustomException ex) {
+//            //this is very important, since it guarantees the user is not authenticated at all
+//            SecurityContextHolder.clearContext();
+//            httpServletResponse.sendError(ex.getHttpStatus().value(), ex.getMessage());
+//            return;
+//        }
         UsernamePasswordAuthenticationToken token = createToken(authorizationHeader);
 
         SecurityContextHolder.getContext().setAuthentication(token);
@@ -37,8 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private boolean authorizationHeaderIsInvalid(String authorizationHeader) {
-        return authorizationHeader == null
-                || !authorizationHeader.startsWith("Bearer ");
+        return authorizationHeader == null || !authorizationHeader.startsWith("Bearer ");
     }
 
     private UsernamePasswordAuthenticationToken createToken(String authorizationHeader) {
@@ -46,6 +53,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         UserPrincipal userPrincipal = tokenService.parseToken(token);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
+        //TODO get authorities from token
 
         return new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
     }

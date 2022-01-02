@@ -1,4 +1,4 @@
-package ua.mai.servs.mod.bbb.services;
+package ua.mai.servs.mod.bbb.security.services;
 
 import ua.mai.servs.models.User;
 import ua.mai.servs.models.UserPrincipal;

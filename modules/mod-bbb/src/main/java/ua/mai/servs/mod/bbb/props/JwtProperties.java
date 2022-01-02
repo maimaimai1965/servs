@@ -7,9 +7,10 @@ import org.springframework.boot.convert.DurationUnit;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-@ConfigurationProperties(prefix = "servs.modules.bbb.jwt")
+@ConfigurationProperties(prefix = "servs.modules.bbb.auth-jwt")
 @Data
 public class JwtProperties {
+    private String endpoint;
     private String secret;
     private String type;
     private String issuer;

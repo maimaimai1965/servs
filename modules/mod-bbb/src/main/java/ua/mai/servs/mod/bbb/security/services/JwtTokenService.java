@@ -1,4 +1,4 @@
-package ua.mai.servs.mod.bbb.services;
+package ua.mai.servs.mod.bbb.security.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -8,17 +8,18 @@ import io.jsonwebtoken.gson.io.GsonDeserializer;
 import io.jsonwebtoken.gson.io.GsonSerializer;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import ua.mai.servs.mod.bbb.props.JwtProperties;
+import ua.mai.servs.mod.bbb.security.services.TokenService;
 import ua.mai.servs.models.User;
 import ua.mai.servs.models.UserPrincipal;
 
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.AbstractMap;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtTokenService implements TokenService {
@@ -32,21 +33,28 @@ public class JwtTokenService implements TokenService {
 
     @Override
     public AbstractMap.SimpleImmutableEntry<String, String> generateToken(User user) {
-        Instant expirationTime = Instant.now().plus(jwtProperties.getExpiresIn().getSeconds(), ChronoUnit.SECONDS);
-        Date expirationDate = Date.from(expirationTime);
+        Claims claims = Jwts.claims().setSubject(user.getUsername());
+        claims.put("auth",
+              List.of("USER", "ADMIN"));
+//              appUserRoles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(
+//              Collectors.toList()));
+        Instant now = Instant.now();
+        Instant expirationTime = now.plus(jwtProperties.getExpiresIn().getSeconds(), ChronoUnit.SECONDS);
 
-        Key key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
+        Key secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
 
         String jti = String.valueOf(UUID.randomUUID());
 
         String compactTokenString = Jwts.builder()
                 .serializeToJsonWith(new GsonSerializer())
+                .setClaims(claims)//
+//                .setSubject(user.getUsername())
                 .setIssuer(jwtProperties.getIssuer())
                 .setAudience(jwtProperties.getAudience())
-                .setSubject(user.getUsername())
-                .setExpiration(expirationDate)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(expirationTime))
                 .setId(jti)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
         return new AbstractMap.SimpleImmutableEntry<>(jti, compactTokenString);
     }
@@ -61,10 +69,8 @@ public class JwtTokenService implements TokenService {
                 .build()
                 .parseClaimsJws(token);
 
-        String username = jwsClaims.getBody()
-                .getSubject();
-        Integer userId = jwsClaims.getBody()
-                .get("id", Integer.class);
+        String username = jwsClaims.getBody().getSubject();
+        Integer userId = jwsClaims.getBody().get("id", Integer.class);
 
         return new UserPrincipal(userId, username);
     }

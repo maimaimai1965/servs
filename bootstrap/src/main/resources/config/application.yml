@@ -16,15 +16,15 @@ spring:
     password: root
   jooq:
     sql-dialect: MYSQL
-jwt:
-  secret: MIICCgKCAgEAu9r5sLpyNSH618apltlGeZ59pYmdUKScA8h6MiVT2dU9g/IVdv7d
-  type: JWT
-  issuer: Mock
-  audience: Test
-  token-type: bearer
-  expires-in: 43199
-  scope: openid
-  tenant: XM
+#jwt:
+#  secret: MIICCgKCAgEAu9r5sLpyNSH618apltlGeZ59pYmdUKScA8h6MiVT2dU9g/IVdv7d
+#  type: JWT
+#  issuer: Mock
+#  audience: Test
+#  token-type: bearer
+#  expires-in: 43199
+#  scope: openid
+#  tenant: XM
 feign:
   httpclient:
     disable-ssl-validation: true
@@ -40,6 +40,7 @@ servs:
   modules:
     aaa:
       url: http://localhost:5001
+      expire-token-before: 300
       services:
         serv-a01:
           endpoints:
@@ -50,13 +51,17 @@ servs:
             operation-method-uri:
     bbb:
       url: http://localhost:5002
+      expire-token-before: 300
       services:
         serv-b11:
           endpoints:
             operations:
               method001-serv-b11: /servs/api/servB11/v1/method001ServB11
               method002-serv-b11: /servs/api/servB11/v1/method002ServB11
-      jwt:
+      authentication:
+        type: JWT
+      auth-jwt:
+        endpoint: /servs/bbb/auth/token
         secret: MIICCgKCAgEAu9r5sLpyNSH618apltlGeZ59pYmdUKScA8h6MiVT2dU9g/IVdv7d
         type: JWT
         issuer: Mock
@@ -65,3 +70,9 @@ servs:
         expires-in: 43199
         scope: openid
         tenant: XM
+  # Logging authentication in debug mode (RequestResponseLoggingFilter)
+  auth-log:
+    active: true
+    payload: false
+    # The part of the Uri that uniquely identifies the authinkification request
+    auth-uri-part: /auth/token

@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import ua.mai.servs.components.CustomResponseEntityExceptionHandler;
+import ua.mai.servs.components.GlobalResponseEntityExceptionHandler;
 import ua.mai.servs.config.ClientConfig;
 import ua.mai.servs.mod.bbb.components.FeignErrorDecoder;
 import ua.mai.servs.mod.bbb.controllers.AuthController;
@@ -15,7 +15,6 @@ import ua.mai.servs.mod.bbb.security.JwtAuthEntryPoint;
 import ua.mai.servs.mod.bbb.security.services.BasicTokenService;
 import ua.mai.servs.mod.bbb.security.services.JwtTokenService;
 import ua.mai.servs.mod.bbb.security.services.TokenService;
-import ua.mai.servs.props.AuthLogProperties;
 //import ua.telesens.o320.trt.emulator.bss.clients.ActivationCallbackClient;
 //import ua.telesens.o320.trt.emulator.bss.components.FeignErrorDecoder;
 //import ua.telesens.o320.trt.emulator.bss.components.RestExceptionHandler;
@@ -77,8 +76,8 @@ public class JwtConfig {
     }
 
     @Bean
-    public CustomResponseEntityExceptionHandler restExceptionHandler() {
-        return new CustomResponseEntityExceptionHandler();
+    public GlobalResponseEntityExceptionHandler restExceptionHandler() {
+        return new GlobalResponseEntityExceptionHandler();
     }
 
     @Bean

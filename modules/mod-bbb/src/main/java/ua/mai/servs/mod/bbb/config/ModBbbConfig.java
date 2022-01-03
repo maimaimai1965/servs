@@ -1,22 +1,18 @@
 package ua.mai.servs.mod.bbb.config;
 
-import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import ua.mai.servs.clients.AuthClient;
-import ua.mai.servs.components.AccessTokenProvider;
-import ua.mai.servs.components.CustomResponseEntityExceptionHandler;
-import ua.mai.servs.components.FeignClientInterceptor;
+import ua.mai.servs.components.GlobalResponseEntityExceptionHandler;
 import ua.mai.servs.config.RequestResponseLoggingFilterConfig;
 import ua.mai.servs.logging.FeignClientRequestResponseLogger;
 import ua.mai.servs.mod.bbb.security.config.JwtConfig;
 import ua.mai.servs.mod.bbb.security.config.JwtConfigurer;
+import ua.mai.servs.props.AuthClientLogProperties;
 import ua.mai.servs.props.AuthLogProperties;
-import ua.mai.servs.services.AuthService;
 //import org.apache.cxf.Bus;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import ua.telesens.o320.tif.core.ws.WsConfiguration;
@@ -37,7 +33,8 @@ import ua.mai.servs.services.AuthService;
       JwtConfigurer.class,
 })
 @EnableConfigurationProperties({
-      AuthLogProperties.class
+      AuthLogProperties.class,
+      AuthClientLogProperties.class
 })
 @ComponentScan("ua.mai.servs.mod.bbb")
 public class ModBbbConfig { //extends WsConfiguration {
@@ -61,13 +58,26 @@ public class ModBbbConfig { //extends WsConfiguration {
 
 
     @Bean
-    public FeignClientRequestResponseLogger customFeignRequestLogging() {
-        return new FeignClientRequestResponseLogger();
+    public FeignClientRequestResponseLogger customFeignRequestLogging(@Autowired AuthClientLogProperties authClientLogProperties) {
+        FeignClientRequestResponseLogger logger = new FeignClientRequestResponseLogger();
+        logger.setRequestMessagePrefix("  REQ_IN : ");
+        logger.setIncludeRequestPayload(true);
+        logger.setMaxRequestPayloadLength(10000);
+
+        logger.setResponseMessagePrefix("  RESP_OUT : ");
+        logger.setIncludeResponsePayload(true);
+        logger.setMaxResponsePayloadLength(10000);
+
+        logger.setAuthLogActive(authClientLogProperties.isActive());
+        logger.setAuthLogPayload(authClientLogProperties.isPayload());
+        logger.setAuthLogAuthUriPart(authClientLogProperties.getAuthUriPart());
+
+        return logger;
     }
 
     @Bean
-    public CustomResponseEntityExceptionHandler restExceptionHandler() {
-        return new CustomResponseEntityExceptionHandler();
+    public GlobalResponseEntityExceptionHandler restExceptionHandler() {
+        return new GlobalResponseEntityExceptionHandler();
     }
 
 

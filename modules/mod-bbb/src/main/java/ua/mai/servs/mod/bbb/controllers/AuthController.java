@@ -20,8 +20,8 @@ public class AuthController {
     }
 
     @PostMapping(value = "${servs.modules.bbb.auth-jwt.endpoint}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Authentication> authentication(@RequestHeader(value = "Authorization") String authorizationHeader,
-                                                         @RequestParam(required = false, name = "grant_type") String grantType) {
+    public ResponseEntity<Authentication> authentication(@RequestHeader(value = "Authorization") String authorizationHeader) {
+//                                                         @RequestParam(required = false, name = "grant_type") String grantType) {
         return ResponseEntity.ok(basicTokenService.getUserPayload(authorizationHeader));
     }
 }

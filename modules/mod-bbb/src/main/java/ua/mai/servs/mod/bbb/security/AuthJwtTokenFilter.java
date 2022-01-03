@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JwtAuthTokenFilter extends OncePerRequestFilter {
+public class AuthJwtTokenFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
 
-    public JwtAuthTokenFilter(TokenService tokenService) {
+    public AuthJwtTokenFilter(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 

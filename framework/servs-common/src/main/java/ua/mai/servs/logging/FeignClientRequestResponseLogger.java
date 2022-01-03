@@ -27,15 +27,27 @@ import static net.logstash.logback.marker.Markers.*;
 @Slf4j
 public class FeignClientRequestResponseLogger extends Logger {
 
-//    private final MiddlewareProps middlewareProps;
-//    private final IntegrationProps integrationProps;
-//    private List<String> eventTypeNames;
-//
-//    @Autowired
-//    public CustomFeignResponseLogging(MiddlewareProps middlewareProps, IntegrationProps integrationProps) {
-//        this.middlewareProps = middlewareProps;
-//        this.integrationProps = integrationProps;
-//    }
+    public static final String DEFAULT_REQUEST_MESSAGE_PREFIX = "  REQ_IN : ";
+    private static final int DEFAULT_MAX_REQUEST_PAYLOAD_LENGTH = 100;
+
+    public static final String DEFAULT_RESPONSE_MESSAGE_PREFIX = "  RESP_OUT : ";
+    private static final int DEFAULT_MAX_RESPONSE_PAYLOAD_LENGTH = 100;
+
+    public static final boolean DEFAULT_AUTH_LOG_ACTIVE = true;
+    public static final boolean DEFAULT_AUTH_LOG_PAYLOAD = false;
+    public static final String DEFAULT_AUTH_LOG_AUTH_URI_PART = "/auth/";
+
+    private String requestMessagePrefix = DEFAULT_REQUEST_MESSAGE_PREFIX;
+    private boolean includeRequestPayload = true;
+    private int maxRequestPayloadLength = DEFAULT_MAX_REQUEST_PAYLOAD_LENGTH;
+
+    private String responseMessagePrefix = DEFAULT_RESPONSE_MESSAGE_PREFIX;
+    private boolean includeResponsePayload = true;
+    private int maxResponsePayloadLength = DEFAULT_MAX_RESPONSE_PAYLOAD_LENGTH;
+
+    private boolean authLogActive = DEFAULT_AUTH_LOG_ACTIVE;
+    private boolean authLogPayload = DEFAULT_AUTH_LOG_PAYLOAD;
+    private String authLogAuthUriPart = DEFAULT_AUTH_LOG_AUTH_URI_PART;
 
     @PostConstruct
     private void postConstruct() throws IllegalAccessException {
@@ -81,7 +93,7 @@ public class FeignClientRequestResponseLogger extends Logger {
                 }
                 return response.toBuilder().body(bodyData).build();
             } else {
-                log.debug("RESP_IN <- {}: {} {} {}", response.request().requestTemplate().feignTarget().name(),
+                log.debug("  RESP_IN <- {}: {} {} {}", response.request().requestTemplate().feignTarget().name(),
                       status, response.request().httpMethod().name(), response.request().url());
                 log(configKey, "<--- END HTTP (%s-byte body)", bodyLength);
             }
@@ -221,5 +233,40 @@ public class FeignClientRequestResponseLogger extends Logger {
     protected void log(String configKey, String format, Object... args) {
     }
 
+    public void setRequestMessagePrefix(String requestMessagePrefix) {
+        this.requestMessagePrefix = requestMessagePrefix;
+    }
+
+    public void setIncludeRequestPayload(boolean includeRequestPayload) {
+        this.includeRequestPayload = includeRequestPayload;
+    }
+
+    public void setMaxRequestPayloadLength(int maxRequestPayloadLength) {
+        this.maxRequestPayloadLength = maxRequestPayloadLength;
+    }
+
+    public void setResponseMessagePrefix(String responseMessagePrefix) {
+        this.responseMessagePrefix = responseMessagePrefix;
+    }
+
+    public void setIncludeResponsePayload(boolean includeResponsePayload) {
+        this.includeResponsePayload = includeResponsePayload;
+    }
+
+    public void setMaxResponsePayloadLength(int maxResponsePayloadLength) {
+        this.maxResponsePayloadLength = maxResponsePayloadLength;
+    }
+
+    public void setAuthLogActive(boolean authLogActive) {
+        this.authLogActive = authLogActive;
+    }
+
+    public void setAuthLogPayload(boolean authLogPayload) {
+        this.authLogPayload = authLogPayload;
+    }
+
+    public void setAuthLogAuthUriPart(String authLogAuthUriPart) {
+        this.authLogAuthUriPart = authLogAuthUriPart;
+    }
 }
 

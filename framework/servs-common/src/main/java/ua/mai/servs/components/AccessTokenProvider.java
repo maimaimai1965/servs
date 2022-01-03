@@ -1,8 +1,9 @@
 package ua.mai.servs.components;
 
+import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import ua.mai.servs.models.AuthenticationResource;
-import ua.mai.servs.services.AuthService;
+import ua.mai.servs.services.AuthExternalService;
 //import ua.telesens.o320.trt.integration.bss.props.MiddlewareProps;
 
 import java.util.Base64;
@@ -16,17 +17,17 @@ public class AccessTokenProvider {
     private String token = null;
     private long expireTime;
 
-    private final AuthService authService;
+    private final AuthExternalService authExternalService;
 //    private final MiddlewareProps middlewareProps;
 
-    public AccessTokenProvider(AuthService authService
+    public AccessTokenProvider(AuthExternalService authExternalService
 //          , MiddlewareProps middlewareProps
     ) {
-        this.authService = authService;
+        this.authExternalService = authExternalService;
 //        this.middlewareProps = middlewareProps;
     }
 
-    public String getToken() {
+    public String getJwtToken() {
         if (token == null || System.currentTimeMillis() > expireTime) {
             authenticate();
         }
@@ -41,7 +42,7 @@ public class AccessTokenProvider {
 
     private synchronized void authenticate() {
         if (token == null || System.currentTimeMillis() > expireTime) {
-            AuthenticationResource authenticationResource = authService.authenticate(
+            AuthenticationResource authenticationResource = authExternalService.authenticate(
                   "Basic " +
                         Base64.getEncoder().withoutPadding().encodeToString(
                             String.format("%s:%s",

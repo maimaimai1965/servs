@@ -1,7 +1,6 @@
 package ua.mai.servs.mod.bbb.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,10 +9,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ua.mai.servs.mod.bbb.props.JwtProperties;
 import ua.mai.servs.mod.bbb.security.JwtAccessDeniedHandler;
-import ua.mai.servs.mod.bbb.security.JwtAuthTokenFilter;
+import ua.mai.servs.mod.bbb.security.AuthJwtTokenFilter;
 import ua.mai.servs.mod.bbb.security.JwtAuthEntryPoint;
 import ua.mai.servs.mod.bbb.security.services.JwtTokenService;
-import ua.mai.servs.mod.bbb.security.services.TokenService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -50,7 +48,7 @@ public class JwtConfigurer extends WebSecurityConfigurerAdapter {
               // Disallow everything else.
               .anyRequest().authenticated()
               .and()
-              .addFilterBefore(new JwtAuthTokenFilter(jwtTokenService),
+              .addFilterBefore(new AuthJwtTokenFilter(jwtTokenService),
                                UsernamePasswordAuthenticationFilter.class);
     }
 

@@ -7,16 +7,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import ua.mai.servs.clients.AuthClient;
+import ua.mai.servs.clients.AuthBbbClient;
 import ua.mai.servs.components.AccessTokenProvider;
 import ua.mai.servs.components.FeignClientInterceptor;
 import ua.mai.servs.config.ClientConfig;
 import ua.mai.servs.logging.FeignClientRequestResponseLogger;
-import ua.mai.servs.components.CustomResponseEntityExceptionHandler;
+import ua.mai.servs.components.GlobalResponseEntityExceptionHandler;
 import ua.mai.servs.config.RequestResponseLoggingFilterConfig;
 import ua.mai.servs.clients.bbb.ServB11Props;
+import ua.mai.servs.logging.RequestResponseLoggingFilter;
+import ua.mai.servs.props.AuthClientLogProperties;
 import ua.mai.servs.props.AuthLogProperties;
-import ua.mai.servs.services.AuthService;
+import ua.mai.servs.services.AuthExternalService;
 //ua.mai.servs.common
 //import org.apache.cxf.Bus;
 //import org.springframework.security.authentication.AuthenticationManager;
@@ -31,7 +33,6 @@ import ua.mai.servs.services.AuthService;
 
 @Configuration
 @Import(value = {
-//        ClientConfig.class,
 //        IntegrationClientConfig.class,
         RequestResponseLoggingFilterConfig.class,
         ClientConfig.class
@@ -39,7 +40,8 @@ import ua.mai.servs.services.AuthService;
 @EnableConfigurationProperties({
       ModAaaProps.class,
       ServB11Props.class,
-      AuthLogProperties.class
+      AuthLogProperties.class,
+      AuthClientLogProperties.class
 })
 @ComponentScan(basePackages={"ua.mai.servs.mod.aaa",
                              "ua.mai.servs.clients"})
@@ -74,25 +76,38 @@ public class ModAaaConfig { //extends WsConfiguration {
     }
 
     @Bean
-    public AuthService authService(@Autowired AuthClient authClient) {
-        return new AuthService(authClient);
+    public AuthExternalService authService(@Autowired AuthBbbClient authBbbClient) {
+        return new AuthExternalService(authBbbClient);
     }
 
     @Bean
-    public AccessTokenProvider accessTokenProvider(@Autowired AuthService authService) {
-        return new AccessTokenProvider(authService
+    public AccessTokenProvider accessTokenProvider(@Autowired AuthExternalService authExternalService) {
+        return new AccessTokenProvider(authExternalService
               //              , middlewareProps
         );
     }
 
     @Bean
-    public FeignClientRequestResponseLogger customFeignRequestLogging() {
-        return new FeignClientRequestResponseLogger();
+    public FeignClientRequestResponseLogger customFeignRequestLogging(@Autowired AuthClientLogProperties authClientLogProperties) {
+        FeignClientRequestResponseLogger logger = new FeignClientRequestResponseLogger();
+        logger.setRequestMessagePrefix("  REQ_IN : ");
+        logger.setIncludeRequestPayload(true);
+        logger.setMaxRequestPayloadLength(10000);
+
+        logger.setResponseMessagePrefix("  RESP_OUT : ");
+        logger.setIncludeResponsePayload(true);
+        logger.setMaxResponsePayloadLength(10000);
+
+        logger.setAuthLogActive(authClientLogProperties.isActive());
+        logger.setAuthLogPayload(authClientLogProperties.isPayload());
+        logger.setAuthLogAuthUriPart(authClientLogProperties.getAuthUriPart());
+
+        return logger;
     }
 
     @Bean
-    public CustomResponseEntityExceptionHandler restExceptionHandler() {
-        return new CustomResponseEntityExceptionHandler();
+    public GlobalResponseEntityExceptionHandler restExceptionHandler() {
+        return new GlobalResponseEntityExceptionHandler();
     }
 
 }

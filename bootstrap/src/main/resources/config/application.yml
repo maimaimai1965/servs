@@ -70,9 +70,15 @@ servs:
         expires-in: 43199
         scope: openid
         tenant: XM
-  # Logging authentication in debug mode (RequestResponseLoggingFilter)
+  # Logging service authentication in debug mode (RequestResponseLoggingFilter)
   auth-log:
     active: true
     payload: false
-    # The part of the Uri that uniquely identifies the authinkification request
+    # The part of the Uri that uniquely identifies the authentication request
+    auth-uri-part: /auth/token
+  # Logging client authentication in debug mode (FeignClientRequestResponseLogger)
+  auth-client-log:
+    active: true
+    payload: false
+    # The part of the Uri that uniquely identifies the authentication request
     auth-uri-part: /auth/token

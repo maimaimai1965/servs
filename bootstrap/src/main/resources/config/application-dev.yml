@@ -13,7 +13,7 @@ logging.level.ua.mai.servs.logging.RequestResponseLoggingFilter: DEBUG
 # Logging errors in services
 logging.level.ua.mai.servs.components.RestExceptionHandler: DEBUG
 
-# Logging user Basic authentication
+# Logging user Basic authentication in bbb services
 logging.level.ua.mai.servs.mod.bbb.security.services.BasicTokenService: DEBUG
 
 logging.level.org.springframework.web.servlet: INFO

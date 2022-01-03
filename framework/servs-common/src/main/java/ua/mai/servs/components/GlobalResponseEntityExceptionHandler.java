@@ -29,13 +29,14 @@ import ua.mai.servs.exceptions.ResourceAlreadyExists;
 import ua.mai.servs.exceptions.ResourceNotFoundException;
 import ua.mai.servs.exceptions.UnauthorizedException;
 import ua.mai.servs.exceptions.ResourceException;
+import org.springframework.security.core.AuthenticationException;
 
 import javax.validation.ConstraintViolationException;
 
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -205,6 +206,12 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ResourceException> unauthorizedException(UnauthorizedException ex) {
+        logError(ex, null, null, null);
+        return new ResponseEntity<>(customResponseBuild(ex), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ResourceException> authenticationException(UnauthorizedException ex) {
         logError(ex, null, null, null);
         return new ResponseEntity<>(customResponseBuild(ex), HttpStatus.UNAUTHORIZED);
     }

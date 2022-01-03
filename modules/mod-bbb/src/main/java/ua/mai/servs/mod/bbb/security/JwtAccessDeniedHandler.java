@@ -27,7 +27,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         } else {
             message = accessDeniedException.getMessage();
         }
-        log.warn(message);
+        log.warn(message + ": " + request.getMethod() + " " + request.getRequestURI()) ;
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         byte[] body = new ObjectMapper()

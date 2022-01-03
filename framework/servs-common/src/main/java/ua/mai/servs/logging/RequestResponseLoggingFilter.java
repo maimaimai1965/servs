@@ -47,6 +47,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
     private boolean authLogPayload = DEFAULT_AUTH_LOG_PAYLOAD;
     private String authLogAuthUriPart = DEFAULT_AUTH_LOG_AUTH_URI_PART;
 
+    //TODO реализовать в логировании использование переменных, определенных выше.
     /**
      * Log each request and respponse with full Request URI, content payload and duration of the request in ms.
      * @param request the request

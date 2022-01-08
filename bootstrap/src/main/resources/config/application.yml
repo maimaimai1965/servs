@@ -64,10 +64,10 @@ servs:
         endpoint: /servs/bbb/auth/token
         secret: MIICCgKCAgEAu9r5sLpyNSH618apltlGeZ59pYmdUKScA8h6MiVT2dU9g/IVdv7d
         type: JWT
-        issuer: Mock
-        audience: Test
         token-type: bearer
         expires-in: 43199
+        issuer: Mock
+        audience: Test
         scope: openid
         tenant: XM
   # Logging service authentication in debug mode (RequestResponseLoggingFilter)

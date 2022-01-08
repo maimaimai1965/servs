@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import feign.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 //import ua.telesens.o320.trt.integration.bss.config.BusinessLog;
@@ -27,10 +28,10 @@ import static net.logstash.logback.marker.Markers.*;
 @Slf4j
 public class FeignClientRequestResponseLogger extends Logger {
 
-    public static final String DEFAULT_REQUEST_MESSAGE_PREFIX = "  REQ_IN : ";
+    public static final String DEFAULT_REQUEST_MESSAGE_PREFIX = "  REQ_OUT -> ";
     private static final int DEFAULT_MAX_REQUEST_PAYLOAD_LENGTH = 100;
 
-    public static final String DEFAULT_RESPONSE_MESSAGE_PREFIX = "  RESP_OUT : ";
+    public static final String DEFAULT_RESPONSE_MESSAGE_PREFIX = "  RESP_IN <- ";
     private static final int DEFAULT_MAX_RESPONSE_PAYLOAD_LENGTH = 100;
 
     public static final boolean DEFAULT_AUTH_LOG_ACTIVE = true;
@@ -63,40 +64,83 @@ public class FeignClientRequestResponseLogger extends Logger {
     protected void logRequest(String configKey, Level logLevel, Request request) {
 //        super.logRequest(configKey, logLevel, request);
         if (log.isDebugEnabled()) {
-            Optional.ofNullable(request.body()).ifPresentOrElse(bytes -> {
-                JsonElement jsonElement = JsonParser.parseString(decodeOrDefault(request.body(), UTF_8, "Binary data"));
-                log.debug("  REQ_OUT -> {}: {} {} body=[{}] ", request.requestTemplate().feignTarget().name(),
-                      request.httpMethod().name(), request.url(), new Gson().fromJson(jsonElement.toString(), HashMap.class));
-//                log.info("REQ_OUT", append("url", request.url()), append("body", new Gson().fromJson(jsonElement.toString(), HashMap.class)));
-            }, () -> {
-                log.debug("REQ_OUT -> {}: {} {}", request.requestTemplate().feignTarget().name(), request.httpMethod().name(),
-                      request.url());
-//                log.info("REQ_OUT", append("url", request.url()));
-            });
+            boolean authRequest = Strings.isNotEmpty(authLogAuthUriPart) && request.url().contains(authLogAuthUriPart);
+
+            if (!authRequest || authLogActive) {
+                StringBuffer reqInfo =new StringBuffer()
+                      .append(requestMessagePrefix)
+                      .append(request.requestTemplate().feignTarget().name()).append(": ")
+                      .append(request.httpMethod().name()).append(" ")
+                      .append(request.url());
+
+                if ((!authRequest) && includeRequestPayload || authRequest && authLogPayload) {
+                    String jsonElementAsString = JsonParser.parseString(decodeOrDefault(request.body(), UTF_8, "Binary data")).toString();
+                    if (!jsonElementAsString.isEmpty()) {
+                        reqInfo.append(" body=[").append(new Gson().fromJson(jsonElementAsString, HashMap.class)).append("]");
+                    }
+                }
+                log.debug(reqInfo.toString());
+            }
+
+//            Optional.ofNullable(request.body()).ifPresentOrElse(bytes -> {
+//                JsonElement jsonElement = JsonParser.parseString(decodeOrDefault(request.body(), UTF_8, "Binary data"));
+//                log.debug("  REQ_OUT -> {}: {} {} body=[{}] ", request.requestTemplate().feignTarget().name(),
+//                      request.httpMethod().name(), request.url(), new Gson().fromJson(jsonElement.toString(), HashMap.class));
+//            }, () -> {
+//                log.debug("  REQ_OUT -> {}: {} {}", request.requestTemplate().feignTarget().name(), request.httpMethod().name(),
+//                      request.url());
+//            });
         }
     }
 
     @Override
     protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response, long elapsedTime) throws IOException {
+//        super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
         if (log.isDebugEnabled()) {
-            int bodyLength = 0;
-            int status = response.status();
-            if (response.body() != null && !(status == 204 || status == 205)) {
-                // HTTP 204 No Content "...response MUST NOT include a message-body"
-                // HTTP 205 Reset Content "...response MUST NOT include an entity"
-                byte[] bodyData = Util.toByteArray(response.body().asInputStream());
-                bodyLength = bodyData.length;
-                if (bodyLength > 0) {
-                    log.debug("  RESP_IN <- {}: {} {} {} body=[{}]", response.request().requestTemplate().feignTarget().name(),
-                          status, response.request().httpMethod().name(), response.request().url(),
-                          decodeOrDefault(bodyData, UTF_8, "Binary data"));
+            boolean authRequest = Strings.isNotEmpty(authLogAuthUriPart) && response.request().url().contains(authLogAuthUriPart);
+            if (!authRequest || authLogActive) {
+                int status = response.status();
+                StringBuffer reqInfo = new StringBuffer().append(responseMessagePrefix)
+                      .append(response.request().requestTemplate().feignTarget().name()).append(": ")
+                      .append(response.status()).append(" ")
+                      .append(response.request().httpMethod().name()).append(" ")
+                      .append(response.request().url());
+
+                if (response.body() != null && (!authRequest && includeRequestPayload || authRequest && authLogPayload)) {
+                    int bodyLength = 0;
+                    if (!(status == 204 || status == 205)) {
+                        // HTTP 204 No Content "...response MUST NOT include a message-body"
+                        // HTTP 205 Reset Content "...response MUST NOT include an entity"
+                        byte[] bodyData = Util.toByteArray(response.body().asInputStream());
+                        bodyLength = bodyData.length;
+                        if (bodyLength > 0) {
+                            reqInfo.append(" body=[").append(decodeOrDefault(bodyData, UTF_8, "Binary data"))
+                                  .append("]");
+                        }
+                        log.debug(reqInfo.toString());
+                        return response.toBuilder().body(bodyData).build();
+                    }
                 }
-                return response.toBuilder().body(bodyData).build();
-            } else {
-                log.debug("  RESP_IN <- {}: {} {} {}", response.request().requestTemplate().feignTarget().name(),
-                      status, response.request().httpMethod().name(), response.request().url());
-                log(configKey, "<--- END HTTP (%s-byte body)", bodyLength);
+                log.debug(reqInfo.toString());
             }
+
+//            int bodyLength = 0;
+//            int status = response.status();
+//            if (response.body() != null && !(status == 204 || status == 205)) {
+//                // HTTP 204 No Content "...response MUST NOT include a message-body"
+//                // HTTP 205 Reset Content "...response MUST NOT include an entity"
+//                byte[] bodyData = Util.toByteArray(response.body().asInputStream());
+//                bodyLength = bodyData.length;
+//                if (bodyLength > 0) {
+//                    log.debug("  RESP_IN <- {}: {} {} {} body=[{}]", response.request().requestTemplate().feignTarget().name(),
+//                          status, response.request().httpMethod().name(), response.request().url(),
+//                          decodeOrDefault(bodyData, UTF_8, "Binary data"));
+//                }
+//                return response.toBuilder().body(bodyData).build();
+//            } else {
+//                log.debug("  RESP_IN <- {}: {} {} {}", response.request().requestTemplate().feignTarget().name(),
+//                      status, response.request().httpMethod().name(), response.request().url());
+//            }
         }
         return response;
 //        MiddlewareProps.OperationMethodUri operationProps = operationProps(response.request().requestTemplate());

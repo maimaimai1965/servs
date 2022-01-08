@@ -28,7 +28,7 @@ public class RequestResponseLoggingFilterConfig {
         RequestResponseLoggingFilter filter = new RequestResponseLoggingFilter();
         filter.setBeforeRequestMessagePrefix("REQ_IN (start)  : ");
         filter.setBeforeRequestMessageSuffix("");
-        filter.setAfterRequestMessagePrefix("REQ_IN (finish) : ");
+        filter.setAfterRequestMessagePrefix("REQ_IN (processed) : ");
         filter.setAfterRequestMessageSuffix("");
         filter.setIncludeRequestPayload(true);
         filter.setMaxRequestPayloadLength(10000);

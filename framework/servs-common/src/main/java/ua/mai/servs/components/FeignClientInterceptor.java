@@ -16,7 +16,7 @@ public class FeignClientInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         if (!requestTemplate.feignTarget().name().contains("auth-jwt")) {
-            requestTemplate.header("Authorization", String.format("Bearer %s", accessTokenProvider.getJwtToken()));
+            requestTemplate.header("Authorization", String.format("Bearer %s", accessTokenProvider.getJwtToken(requestTemplate)));
         }
     }
 }

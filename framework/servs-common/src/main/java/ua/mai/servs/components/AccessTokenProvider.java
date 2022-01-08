@@ -27,7 +27,7 @@ public class AccessTokenProvider {
 //        this.middlewareProps = middlewareProps;
     }
 
-    public String getJwtToken() {
+    public String getJwtToken(RequestTemplate requestTemplate) {
         if (token == null || System.currentTimeMillis() > expireTime) {
             authenticate();
         }
@@ -37,7 +37,7 @@ public class AccessTokenProvider {
     public synchronized void resetToken() {
         this.token = null;
         this.expireTime = 0;
-        log.info("ResetToken");
+        log.debug("ResetToken");
     }
 
     private synchronized void authenticate() {
@@ -58,7 +58,7 @@ public class AccessTokenProvider {
                   - 1000
 //                    - middlewareProps.getExpireTokenBefore()
             );
-            log.info("TokenGet ExpireOn={}", new Date(expireTime));
+            log.debug("TokenGet ExpireOn={}", new Date(expireTime));
         }
     }
 }

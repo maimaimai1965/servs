@@ -90,11 +90,11 @@ public class ModAaaConfig { //extends WsConfiguration {
     @Bean
     public FeignClientRequestResponseLogger customFeignRequestLogging(@Autowired AuthClientLogProperties authClientLogProperties) {
         FeignClientRequestResponseLogger logger = new FeignClientRequestResponseLogger();
-        logger.setRequestMessagePrefix("  REQ_IN : ");
+        logger.setRequestMessagePrefix("  REQ_OUT -> ");
         logger.setIncludeRequestPayload(true);
         logger.setMaxRequestPayloadLength(10000);
 
-        logger.setResponseMessagePrefix("  RESP_OUT : ");
+        logger.setResponseMessagePrefix("  RESP_IN <- ");
         logger.setIncludeResponsePayload(true);
         logger.setMaxResponsePayloadLength(10000);
 
